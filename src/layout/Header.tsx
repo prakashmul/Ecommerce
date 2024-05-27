@@ -1,3 +1,4 @@
+import Button from '../component/reusable/button/button';
 import { Link, useLocation } from 'react-router-dom'
 
 const NavItems = [
@@ -19,7 +20,7 @@ const NavItems = [
   },
 
   {
-  title: "Post",
+    title: "Post",
     path: "/Post"
   },
 ]
@@ -47,15 +48,31 @@ const Header = () => {
               NavItems.map((item, idx) => (
                 <li key={idx}>
                   <Link
-                  to={item.path}
-                  className={` ${item.path === location.pathname ? "text-blue-700" : "text-black"} block py-2 px-3 rounded md:bg-transparent md:p-0`}
-                  aria-current="page">
+                    to={item.path}
+                    className={` ${item.path === location.pathname ? "text-blue-700" : "text-black"} block py-2 px-3 rounded md:bg-transparent md:p-0`}
+                    aria-current="page">
                     {item.title}
                   </Link>
                 </li>
               ))
             }
           </ul>
+        </div>
+        <div className='flex gap-2 items-center'>
+          <Button
+            buttonType={"button"}
+            buttonColor={{ outline: true }}
+            rounded
+            >
+              Sign in
+          </Button>
+          <Button
+            buttonType={"button"}
+            buttonColor={{ primary: true }}
+            rounded
+            >
+              Register
+          </Button>
         </div>
       </div>
     </nav>
