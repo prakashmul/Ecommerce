@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import Button from '../component/reusable/button/button';
 import { Link, useLocation } from 'react-router-dom'
 
@@ -24,19 +25,22 @@ const NavItems = [
     path: "/Post"
   },
 
-  {
-  title: "Signin",
-  path: "/signin"
-},
-{
-  title: "Register",
-  path: "/register"
-},
+
 ]
 
 const Header = () => {
 
   const location = useLocation();
+  const [isLogin, setIsLogin] = useState(false);
+
+  useEffect (() =>{
+    if(location.pathname === "/signin"){
+      setIsLogin(true)
+    }else{
+      setIsLogin(false)
+    }
+  }, [location.pathname])
+
   return (
 
     <nav className="bg-white border-gray-200 dark:bg-gray-900 dark:border-gray-700">
@@ -68,23 +72,23 @@ const Header = () => {
           </ul>
         </div>
         <div className='flex gap-2 items-center'>
-          <Link to= "/signin">
-          <Button
-            buttonType={"button"}
-            buttonColor={{ outline: true }}
-            rounded
-          >
-            Sign in
-          </Button>
+          <Link to="/signin">
+            <Button
+              buttonType={"button"}
+              buttonColor={isLogin ? { primary: true } : { outline: true }}
+              rounded
+            >
+              Sign in
+            </Button>
           </Link>
-          <Link to= "/register">
-          <Button
-            buttonType={"button"}
-            buttonColor={{ primary: true }}
-            rounded
-          >
-            Register
-          </Button>
+          <Link to="/register">
+            <Button
+              buttonType={"button"}
+              buttonColor={!isLogin ? { primary: true } : { outline: true }}
+              rounded
+            >
+              Register
+            </Button>
           </Link>
         </div>
       </div>
