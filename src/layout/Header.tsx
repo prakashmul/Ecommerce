@@ -23,6 +23,15 @@ const NavItems = [
     title: "Post",
     path: "/Post"
   },
+
+  {
+  title: "Signin",
+  path: "/signin"
+},
+{
+  title: "Register",
+  path: "/register"
+},
 ]
 
 const Header = () => {
@@ -59,20 +68,24 @@ const Header = () => {
           </ul>
         </div>
         <div className='flex gap-2 items-center'>
+          <Link to= "/signin">
           <Button
             buttonType={"button"}
             buttonColor={{ outline: true }}
             rounded
-            >
-              Sign in
+          >
+            Sign in
           </Button>
+          </Link>
+          <Link to= "/register">
           <Button
             buttonType={"button"}
             buttonColor={{ primary: true }}
             rounded
-            >
-              Register
+          >
+            Register
           </Button>
+          </Link>
         </div>
       </div>
     </nav>

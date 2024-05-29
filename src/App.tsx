@@ -8,6 +8,8 @@ import Contact from "./pages/contact/Contact";
 import Pricing from "./pages/pricing/Pricing";
 import SingleProduct from "./pages/products/product-detail";
 import Post from "./pages/Post/Post";
+import Signin from "./pages/Signin/signin";
+import Register from "./pages/Register/register";
 
 const App = () => {
   return (
@@ -21,6 +23,8 @@ const App = () => {
         <Route path="/contact" element={<Contact />} />
         <Route path="/pricing" element={<Pricing />} />
         <Route path="/Post" element={<Post />} />
+        <Route path="/signin" element={<Signin />} />
+        <Route path="/register" element={<Register />} />
       </Routes>
     </Router>
   );
