@@ -24,9 +24,9 @@ const Button = ({
             type={buttonType}
             className={classNames(
                 'px-4 py-2',
-                buttonColor.primary && "bg-amber-500 text-white",
+                buttonColor.primary && "bg-blue-700 text-white",
                 buttonColor.secondary && "bg-rose-800 text-white",
-                buttonColor.outline && "bg-white text-amber-500 border border-amber-500",
+                buttonColor.outline && "bg-white text-blue-700 border border-blue-700",
                 rounded ? "rounded-full" : "rounded-lg"
             )}
         >
