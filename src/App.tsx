@@ -10,6 +10,7 @@ import SingleProduct from "./pages/products/product-detail";
 import Post from "./pages/Post/Post";
 import Signin from "./pages/Signin/signin";
 import Register from "./pages/Register/register";
+import NotFound from "./pages/not-found/notfound";
 
 const App = () => {
   return (
@@ -17,6 +18,8 @@ const App = () => {
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="*" element={<NotFound />} />
+
         <Route path="/products" element={<Product />} />
         <Route path="/products/:id" element={<SingleProduct />} />
         
