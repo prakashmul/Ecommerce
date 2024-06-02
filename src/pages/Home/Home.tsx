@@ -1,8 +1,8 @@
 import { useState } from "react";
-import Carousel from "../../component/Home/carousel";
 
 import Color from "../../hooks/Color"
 import ReactHook from "../../hooks/Hook"
+import SwiperSlider from "../../component/Home/slider";
 
 const Home = () => {
   const [color, setColor] = useState('');
@@ -42,7 +42,7 @@ const Home = () => {
     // </div>
 
     <div>
-      <Carousel />
+      <SwiperSlider />
     </div>
   )
 }
