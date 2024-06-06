@@ -90,6 +90,15 @@ const Header = () => {
               Register
             </Button>
           </Link>
+          <Link to="/dashboard">
+          <Button
+              buttonType={"button"}
+              buttonColor={{secondary: true }}
+              rounded
+            >
+              Dashboard
+            </Button>
+          </Link>
         </div>
       </div>
     </nav>
