@@ -1,3 +1,5 @@
+const bcrypt = require("bcrypt");
+
 const UserModel = require("../Model/userModel");
 
 exports.CreateUser = async (req, res) => {
@@ -13,15 +15,17 @@ exports.CreateUser = async (req, res) => {
   if (CheckEmail) {
     return res.status(400).json({ error: "Email already exist" });
   } else {
+    const hashPassword = await bcrypt.hash(req.body.password, 10);
+
     const createUser = await new UserModel({
       email: req.body.email,
-      password: req.body.password,
+      password: hashPassword,
       "userDetail.firstName": req.body.firstName,
       "userDetail.middleName": req.body.middleName,
       "userDetail.lastName": req.body.lastName,
       "userDetail.phoneNumber": req.body.phoneNumber,
       "userDetail.address": req.body.address,
-      "userDetail.gender": req.body.gender
+      "userDetail.gender": req.body.gender,
     });
 
     const saveUser = await createUser.save();
@@ -42,18 +46,40 @@ exports.getAllUser = async (req, res) => {
   }
 };
 
-exports.updateUser = async(req, res) =>{
-  const update = await UserModel.findByIdAndUpdate(req.params.id, {
-    "userDetail.firstName": req.body.firstName,
-    "userDetail.middleName": req.body.middleName,
-    "userDetail.lastName": req.body.lastName,
-    "userDetail.phoneNumber": req.body.phoneNumber,
-    "userDetail.address": req.body.address,
-    "userDetail.gender": req.body.gender
-  }, {new: true})
+exports.updateUser = async (req, res) => {
+  const update = await UserModel.findByIdAndUpdate(
+    req.params.id,
+    {
+      "userDetail.firstName": req.body.firstName,
+      "userDetail.middleName": req.body.middleName,
+      "userDetail.lastName": req.body.lastName,
+      "userDetail.phoneNumber": req.body.phoneNumber,
+      "userDetail.address": req.body.address,
+      "userDetail.gender": req.body.gender,
+    },
+    { new: true }
+  );
 
-  if(!update){
-    return res.json({message: "Not found"}).status(400);
+  if (!update) {
+    return res.json({ message: "Not found" }).status(400);
   }
   res.send(update);
-}
+};
+
+exports.logIn = async (req, res) => {
+  const { email, password } = req.body;
+
+  const checkUser = await UserModel.findOne({ email: email });
+
+  if (!checkUser) {
+    return res.json({ message: "User not  found" }).status(400);
+  }
+
+  const checkPassword = await bcrypt.compare(password, checkUser.password);
+
+  if (!checkPassword) {
+    return res.json({ message: "Password is invalid" }).status(400);
+  }
+
+  return res.json({ message: "Login Successful" }).status(201);
+};
