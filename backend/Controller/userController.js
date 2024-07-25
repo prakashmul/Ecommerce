@@ -1,6 +1,9 @@
 const bcrypt = require("bcrypt");
-
 const UserModel = require("../Model/userModel");
+const jwt = require("jsonwebtoken");
+const {expressjwt: ExpressJWT} = require("express-jwt");
+
+const secretKey = process.env.SECRET_KEY
 
 exports.CreateUser = async (req, res) => {
   const CheckEmail = await UserModel.findOne({ email: req.body.email });
@@ -77,9 +80,30 @@ exports.logIn = async (req, res) => {
 
   const checkPassword = await bcrypt.compare(password, checkUser.password);
 
+  const access_token = await jwt.sign(
+    {
+      name: checkUser.userDetail.firstName,
+      id: checkUser._id,
+      email: checkUser.email
+    }, process.env.SECRET_KEY,
+    { expiresIn: "1d" }
+  );
+
   if (!checkPassword) {
-    return res.json({ message: "Password is invalid" }).status(400);
+    return res.json({ error: "Password is invalid" }).status(400);
   }
 
-  return res.json({ message: "Login Successful" }).status(201);
+  return res.json({ message: "Login Successful", accessToken: access_token }).status(201);
 };
+
+exports.verifyJWT = ExpressJWT({
+  secret: secretKey,
+  algorithms: ["HS256"]
+})
+// .then((req) => {
+//   if(!req.auth.admin){
+//     return res.json({error:"Unauthorized"}).status(401)
+//   }
+// }).catch(() => {
+//   return res.json({error:"Unauthorized"}).status(401)
+// })
