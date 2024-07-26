@@ -1,9 +1,9 @@
 const bcrypt = require("bcrypt");
 const UserModel = require("../Model/userModel");
 const jwt = require("jsonwebtoken");
-const {expressjwt: ExpressJWT} = require("express-jwt");
+const mongoose = require("mongoose");
 
-const secretKey = process.env.SECRET_KEY
+const secretKey = process.env.SECRET_KEY;
 
 exports.CreateUser = async (req, res) => {
   const CheckEmail = await UserModel.findOne({ email: req.body.email });
@@ -84,8 +84,9 @@ exports.logIn = async (req, res) => {
     {
       name: checkUser.userDetail.firstName,
       id: checkUser._id,
-      email: checkUser.email
-    }, process.env.SECRET_KEY,
+      email: checkUser.email,
+    },
+    process.env.SECRET_KEY,
     { expiresIn: "1d" }
   );
 
@@ -93,17 +94,42 @@ exports.logIn = async (req, res) => {
     return res.json({ error: "Password is invalid" }).status(400);
   }
 
-  return res.json({ message: "Login Successful", accessToken: access_token }).status(201);
+  return res
+    .json({
+      message: "Login Successful",
+      accessToken: access_token,
+      user: checkUser,
+    })
+    .status(201);
 };
 
-exports.verifyJWT = ExpressJWT({
-  secret: secretKey,
-  algorithms: ["HS256"]
-})
-// .then((req) => {
-//   if(!req.auth.admin){
-//     return res.json({error:"Unauthorized"}).status(401)
-//   }
-// }).catch(() => {
-//   return res.json({error:"Unauthorized"}).status(401)
-// })
+exports.getUserById = async (req, res) => {
+  const { id } = req.params;
+
+  if(!mongoose.Types.ObjectId.isValid(id)){
+    return res.status(400).json({error: "Invalid ID"});
+  }
+
+  const user = await UserModel.findOne({ _id: id });
+
+  if (!user) {
+    return res.json({ error: "User not found" }).status(400);
+  }
+  return res.json({ user: user }).status(200);
+};
+
+
+exports.deleteUser = async(req, res) => {
+  const{id} = req.params;
+
+  const user = await UserModel.findByIdAndDelete(id);
+
+  if(!mongoose.Types.ObjectId.isValid(id)){
+    return res.status(400).json({error: "Invalid ID"});
+  }
+
+  if (!user) {
+    return res.json({ error: "User not found" }).status(400);
+  }
+  return res.json({ message: "Account deactivated"}).status(200);
+}
