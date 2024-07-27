@@ -12,12 +12,14 @@ const bodyParser = require('body-parser');
 
 // route import
 const UserRoute = require("./Route/userRoute");
+const CategoryRoute = require('./Route/categoryRoute');
 
 // Server uses
 app.use(bodyParser.json())
 app.use(morgan('dev'))
 
 app.use('/api', UserRoute);
+app.use('/api',CategoryRoute);
 
 // Server start index
 app.get('/', (req,res) => {
