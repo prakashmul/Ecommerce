@@ -9,13 +9,13 @@ const transporter = nodemailer.createTransport({
 });
 
 
-async function sendEmail(userEmail, subject) {
+async function sendEmail(mailOptions) {
   const info = await transporter.sendMail({
     from: '23prakashmul@gmail.com', 
-    to: 'rpaudel247@gmail.com', 
-    subject: subject, 
-    text: "Hello world?", 
-    html: "<b>Hello world?</b>", 
+    to: mailOptions.userEmail, 
+    subject: mailOptions.subject, 
+    text: mailOptions.text, 
+    html: mailOptions.html, 
   });
 
   console.log("Message sent: %s", info.messageId);
