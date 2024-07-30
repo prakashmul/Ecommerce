@@ -93,6 +93,7 @@ exports.getAllUser = async (req, res) => {
   }
 };
 
+// Update user
 exports.updateUser = async (req, res) => {
   const update = await UserModel.findByIdAndUpdate(
     req.params.id,
@@ -113,6 +114,7 @@ exports.updateUser = async (req, res) => {
   res.send(update);
 };
 
+// Login
 exports.logIn = async (req, res) => {
   const { email, password } = req.body;
 
@@ -151,6 +153,7 @@ exports.logIn = async (req, res) => {
     .status(201);
 };
 
+// Get user by ID
 exports.getUserById = async (req, res) => {
   const { id } = req.params;
 
@@ -166,7 +169,7 @@ exports.getUserById = async (req, res) => {
   return res.json({ user: user }).status(200);
 };
 
-
+// Delete user
 exports.deleteUser = async(req, res) => {
   const{id} = req.params;
 
@@ -180,4 +183,108 @@ exports.deleteUser = async(req, res) => {
     return res.json({ error: "User not found" }).status(400);
   }
   return res.json({ message: "Account deactivated"}).status(200);
+}
+
+
+// Forgot password
+exports.forgotPassword = async(req, res) => {
+  const {email} = req.body;
+  const user = await UserModel.findOne({email: email});
+
+  if(!user){
+    return res.json({ message: "User not found"}).status(400);
+ }
+
+  // Generate token for email verification
+  const token = await jwt.sign(
+    {
+      email: email,
+      id: user._id
+    },
+    SECRET_KEY,
+    { expiresIn: "1h" }
+  );
+
+  if(!token){
+    return res.status(400).json({ error: "Failed to generate token" });
+  }
+
+  // send email
+  const url = `${process.env.APP_URL}/reset-password/${token}`
+  const mailOptions = {
+    userEmail: email,
+    subject: "Reset password",
+    text: "Reset password",
+    html: `<a href="${url}"><button>Reset Password</button></a>`
+  }
+  sendEmail(mailOptions);
+
+  return res.status(200).json({ message: "Reset link has been sent to your email" });
+}
+
+// Reset password
+exports.resetPassword = async (req, res) => {
+  const {token} = req.params;
+  const {email, id} = jwt.decode(token);
+  const {password} = req.body;
+
+  const user = await UserModel.findOne({email: email});
+
+  if(!user) {
+    return res.status(400).json({error: "User not found"});
+  }
+
+  const hashPassword = await bcrypt.hash(password, 10);
+
+  user.password = hashPassword;
+
+  await user.save();
+
+  if(!user){
+    return res.status(400).json({error: "Password not saved"});
+  }
+
+  return res.status(200).json({message: "Password reset succesfully"});
+}
+
+
+// Resend confirmation
+exports.resendConfirmation = async (req, res) => {
+  const {email} = req.body;
+
+  const user = await UserModel.findOne({email: email});
+
+  if(!user){
+    return res.status(400).json({error: "User not found"});
+  }
+
+  if(user.isverified){
+    return res.status(400).json({error: "User already verified"});
+  }
+
+      // Generate token for email verification
+      const token = await jwt.sign(
+        {
+          email: email
+        },
+        SECRET_KEY,
+        { expiresIn: "1h" }
+      );
+  
+      if(!token){
+        return res.status(400).json({ error: "Failed to generate token" });
+      }
+  
+      // send email
+      const url = `${process.env.APP_URL}/confirm-email/${token}`
+      const mailOptions = {
+        userEmail: email,
+        subject: "Resend email verification",
+        text: "Please verify your email",
+        html: `<a href="${url}"><button>Verify account</button></a>`
+      }
+      sendEmail(mailOptions);
+
+      return res.status(200).json({ message: "Confirmation link has been sent to your email" });
+
 }
