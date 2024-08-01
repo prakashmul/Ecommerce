@@ -19,9 +19,13 @@ const ProductRoute = require('./Route/productRoute');
 app.use(bodyParser.json())
 app.use(morgan('dev'))
 
+
+
 app.use('/api', UserRoute);
 app.use('/api',CategoryRoute);
 app.use('/api',ProductRoute);
+
+app.use("/public/uploads", express.static(__dirname + '/public/uploads'))
 
 // Server start index
 app.get('/', (req,res) => {
