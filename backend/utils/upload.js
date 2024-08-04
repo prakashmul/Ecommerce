@@ -9,7 +9,8 @@ const storage = multer.diskStorage({
   filename: function (req, file, cb) {
     const ext = path.extname(file.originalname) //file extension name
     const name = path.basename(file.originalname, ext);
-    const fileName = name + Date.now() + ext;
+    const fixNameSpace = name.replace(/\s+/g, "_");
+    const fileName = "ecommerce_" + fixNameSpace + "_" + Date.now() + ext;
 
     cb(null, fileName);
   },
