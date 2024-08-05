@@ -9,6 +9,7 @@ const app = express();
 const morgan = require("morgan")
 const port = process.env.PORT;
 const bodyParser = require('body-parser');
+const cors = require("cors");
 
 // route import
 const UserRoute = require("./Route/userRoute");
@@ -18,6 +19,7 @@ const ProductRoute = require('./Route/productRoute');
 // Server uses
 app.use(bodyParser.json())
 app.use(morgan('dev'))
+app.use(cors())
 
 app.use('/api', UserRoute);
 app.use('/api',CategoryRoute);

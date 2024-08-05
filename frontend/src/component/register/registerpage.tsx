@@ -2,9 +2,11 @@ import { useCallback } from "react";
 import { useForm } from "react-hook-form"
 import { Link } from "react-router-dom"
 import Button from "../reusable/button/button";
+import axios from "axios";
 
 import *  as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup"
+import { AppConfig } from "../../config/app.config";
 
 interface IRegisterForm {
   first_name: string,
@@ -40,8 +42,20 @@ const RegisterPage = () => {
     resolver: yupResolver(registerValidation),
   });
 
-  const onRegister = useCallback((values: IRegisterForm) => {
-    console.log(values);
+  const onRegister = useCallback(async(values: IRegisterForm) => {
+    try{
+      const res = await axios.post(`${AppConfig.API_URL}/register`,
+        {
+          email: values.email,
+          firstName: values.first_name,
+          lastName: values.last_name,
+          password: values.password,
+          phoneNumber: values.phone_number
+        })
+        console.log(res)
+    } catch(error: unknown) {
+      console.log(error);
+    }
   }, [])
 
   return (

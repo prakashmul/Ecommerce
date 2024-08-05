@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
+import { AppConfig } from "../../config/app.config"
 
 interface IProduct {
   category: string,
@@ -21,7 +22,7 @@ const Products = () => {
 
     const getProducts = async () => {
       try {
-        const res = await fetch('https://fakestoreapi.com/products');
+        const res = await fetch(`${AppConfig.API_URL}/products`);
         const products = await res.json();
         setProducts(products)
       } catch (error: any) {
