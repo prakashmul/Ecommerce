@@ -4,6 +4,10 @@ import { yupResolver } from "@hookform/resolvers/yup"
 import { useForm } from "react-hook-form";
 import { useCallback } from "react";
 import Button from "../reusable/button/button";
+import { AppConfig } from "../../config/app.config";
+import { errorMessage } from "../../utils/helper";
+import { toast } from "sonner";
+import axios from 'axios';
 
 interface ISigninForm {
     email: string,
@@ -16,11 +20,6 @@ const SigninPage = () => {
         password: yup
             .string()
             .required("Password is required")
-            .min(8, "Password must be at least 8 characters")
-            .matches(
-                /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%?&#])[A-Za-z\d@$!%?&#]+$/,
-                "Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character",
-            ),
     })
 
     const {
@@ -32,8 +31,18 @@ const SigninPage = () => {
         resolver: yupResolver(signinValidation),
     });
 
-    const onSignin = useCallback((values: ISigninForm) => {
-        console.log(values);
+    const onSignin = useCallback(async(values: ISigninForm) => {
+        try{
+            const {data} = await axios.post(`${AppConfig.API_URL}/login`, {
+                email: values.email,
+                password: values.password
+            })
+            toast.success(data.message || "Login Successfully")
+            console.log(data)
+        } catch(error) {
+            toast.error(errorMessage(error))
+            console.log(error)
+        }
     }, [])
 
     return (

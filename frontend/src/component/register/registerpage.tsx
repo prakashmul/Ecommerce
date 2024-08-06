@@ -7,6 +7,8 @@ import axios from "axios";
 import *  as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup"
 import { AppConfig } from "../../config/app.config";
+import { toast } from "sonner";
+import { errorMessage } from "../../utils/helper";
 
 interface IRegisterForm {
   first_name: string,
@@ -42,9 +44,9 @@ const RegisterPage = () => {
     resolver: yupResolver(registerValidation),
   });
 
-  const onRegister = useCallback(async(values: IRegisterForm) => {
-    try{
-      const res = await axios.post(`${AppConfig.API_URL}/register`,
+  const onRegister = useCallback(async (values: IRegisterForm) => {
+    try {
+      const { data } = await axios.post(`${AppConfig.API_URL}/register`,
         {
           email: values.email,
           firstName: values.first_name,
@@ -52,9 +54,10 @@ const RegisterPage = () => {
           password: values.password,
           phoneNumber: values.phone_number
         })
-        console.log(res)
-    } catch(error: unknown) {
-      console.log(error);
+      console.log(data)
+      toast.success(data.response?.message || "Register successfully")
+    } catch (error: unknown) {
+      toast.error(errorMessage(error))
     }
   }, [])
 
