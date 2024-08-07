@@ -14,6 +14,8 @@ import NotFound from "./pages/not-found/notfound";
 import Dashboard from "./pages/dashboard/dashboard";
 import AuthLayout from "./layout/auth-layout/auth";
 import DefaultLayout from "./layout/default/default";
+import Category from "./pages/category/category";
+import Product_form from "./pages/products/product-form";
 
 const App = () => {
   return (
@@ -27,7 +29,9 @@ const App = () => {
 
           <Route path="/products" element={<Product />} />
           <Route path="/products/:id" element={<SingleProduct />} />
+          <Route path="/productform" element={<Product_form />} />
 
+          <Route path="/categoryform" element={<Category />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/pricing" element={<Pricing />} />
 
