@@ -1,4 +1,4 @@
-import Sidebar from '../../layout/side-bar'
+
 
 const Dashboard = () => {
   return (

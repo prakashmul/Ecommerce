@@ -1,14 +1,17 @@
 import { useCallback } from "react";
 import { useForm } from "react-hook-form"
 import { Link } from "react-router-dom"
-import Button from "../reusable/button/button";
+
 import axios from "axios";
 
 import *  as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup"
-import { AppConfig } from "../../config/app.config";
+
 import { toast } from "sonner";
-import { errorMessage } from "../../utils/helper";
+
+import Button from "../../../component/reusable/button/button";
+import { AppConfig } from "../../../config/app.config";
+import { errorMessage } from "../../../utils/helper";
 
 
 interface IProductForm {
@@ -16,18 +19,18 @@ interface IProductForm {
     product_price : number,
     product_description : string,
     product_rating : number,
-    product_category : number,
+    product_category : string,
     total_product : number
 }
 
-const ProductForm = () => {
+const AddProductForm = () => {
 
   const productValidation = yup.object().shape({
     product_name: yup.string().required("Name is required"),
     product_price : yup.number().required("Price is required"),
     product_description : yup.string().required("Description is required"),
     product_rating : yup.number().required("Rating is required"),
-    product_category : yup.number().required("Category is required"),
+    product_category : yup.string().required("Category is required"),
     total_product : yup.number().required("Product is required")
   })
 
@@ -152,4 +155,4 @@ const ProductForm = () => {
   )
 }
 
-export default ProductForm
+export default AddProductForm

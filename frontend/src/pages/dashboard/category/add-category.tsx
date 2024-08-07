@@ -1,21 +1,24 @@
 import { useCallback } from "react";
 import { useForm } from "react-hook-form"
 import { Link } from "react-router-dom"
-import Button from "../reusable/button/button";
+
 import axios from "axios";
 
 import *  as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup"
-import { AppConfig } from "../../config/app.config";
+
 import { toast } from "sonner";
-import { errorMessage } from "../../utils/helper";
+import { AppConfig } from "../../../config/app.config";
+import { errorMessage } from "../../../utils/helper";
+import Button from "../../../component/reusable/button/button";
+
 
 
 interface ICategoryForm {
   category_name: string
 }
 
-const CategoryPage = () => {
+const AddCategoryForm = () => {
 
   const categoryValidation = yup.object().shape({
     category_name: yup.string().required("Field is required")
@@ -66,7 +69,7 @@ const CategoryPage = () => {
             buttonColor={{
               primary: true,
             }}>
-            Search
+            Add
           </Button>
 
           
@@ -77,4 +80,4 @@ const CategoryPage = () => {
   )
 }
 
-export default CategoryPage
+export default AddCategoryForm

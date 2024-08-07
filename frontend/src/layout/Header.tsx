@@ -12,14 +12,6 @@ const NavItems = [
     path: "/Products"
   },
   {
-    title: "Productform",
-    path: "/Productform"
-  },
-  {
-    title: "Categoryform",
-    path: "/Categoryform"
-  },
-  {
     title: "Pricing",
     path: "/Pricing"
   },

@@ -14,8 +14,13 @@ import NotFound from "./pages/not-found/notfound";
 import Dashboard from "./pages/dashboard/dashboard";
 import AuthLayout from "./layout/auth-layout/auth";
 import DefaultLayout from "./layout/default/default";
-import Category from "./pages/category/category";
-import Product_form from "./pages/products/product-form";
+import AddProductForm from "./pages/dashboard/product/add-products";
+import AddCategoryForm from "./pages/dashboard/category/add-category";
+import GetProduct from "./pages/dashboard/product/get-product";
+import GetOrder from "./pages/dashboard/orders/get-order";
+import GetCustomer from "./pages/dashboard/customers/get-customer";
+import GetCategory from "./pages/dashboard/category/get-category";
+
 
 const App = () => {
   return (
@@ -29,9 +34,7 @@ const App = () => {
 
           <Route path="/products" element={<Product />} />
           <Route path="/products/:id" element={<SingleProduct />} />
-          <Route path="/productform" element={<Product_form />} />
 
-          <Route path="/categoryform" element={<Category />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/pricing" element={<Pricing />} />
 
@@ -43,6 +46,20 @@ const App = () => {
         {/* Authentication layout */}
         <Route element={<AuthLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
+
+          {/* Products */}
+          <Route path="/dashboard/products" element={<GetProduct />} />
+          <Route path="/dashboard/add-product" element={<AddProductForm />} />
+
+          {/* Category */}
+          <Route path="/dashboard/add-category" element={<AddCategoryForm />} />
+          <Route path="/dashboard/category" element={<GetCategory />} />
+
+          {/* Orders */}
+          <Route path="/dashboard/orders" element={<GetOrder />} />
+
+          {/* Customers */}
+          <Route path="/dashboard/customers" element={<GetCustomer />} />
         </Route>
       </Routes>
     </Router>
