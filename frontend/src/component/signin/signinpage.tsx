@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import *  as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup"
 import { useForm } from "react-hook-form";
@@ -8,6 +8,7 @@ import { AppConfig } from "../../config/app.config";
 import { errorMessage } from "../../utils/helper";
 import { toast } from "sonner";
 import axios from 'axios';
+import Cookie from "js-cookie";
 
 interface ISigninForm {
     email: string,
@@ -15,6 +16,8 @@ interface ISigninForm {
 }
 
 const SigninPage = () => {
+    const navigate = useNavigate();
+
     const signinValidation = yup.object().shape({
         email: yup.string().email("Please enter a valid email address").required("Email address is required"),
         password: yup
@@ -37,13 +40,17 @@ const SigninPage = () => {
                 email: values.email,
                 password: values.password
             })
+            Cookie.set('accessToken', data.accessToken);
+            Cookie.set('userId', data.user._id);
+
+            navigate('/dashboard')
             toast.success(data.message || "Login Successfully")
-            console.log(data)
+            
         } catch(error) {
             toast.error(errorMessage(error))
             console.log(error)
         }
-    }, [])
+    }, [navigate])
 
     return (
         <div>
