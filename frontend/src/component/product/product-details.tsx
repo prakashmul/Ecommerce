@@ -29,7 +29,7 @@ const ProductDetail = ({ id }: Props) => {
 
     return (
         <div className="border p-5 rounded-lg space-y-5 max-w-screen-xl mx-auto">
-            <div className="flex items-center justify-center">
+            {/* <div className="flex items-center justify-center">
               <img src={product?.image} alt={product?.title} className="h-[410px]" />
             </div>
             <div className="border-t mt-2">
@@ -38,7 +38,7 @@ const ProductDetail = ({ id }: Props) => {
               <div><span className="font-bold">Rating:</span> {product?.rating.rate}, {product?.rating.count}</div>
               <p><span className="font-bold">Price:</span> {product?.price}</p>
               <p className="">{product?.description}</p>
-            </div>
+            </div> */}
             
           </div>
     )
