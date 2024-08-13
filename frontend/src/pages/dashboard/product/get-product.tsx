@@ -11,11 +11,10 @@ import {
   TableHeader,
   TableRow,
 } from "../../../@/components/ui/table"
+import { displayImage } from '../../../utils/helper'
 
 const GetProduct = () => {
-  const {data} = useSWR('viewproduct', getProducts)
-
-  console.log(data)
+  const {data: products} = useSWR('viewproduct', getProducts)
   
   return (
     <div>
@@ -31,16 +30,22 @@ const GetProduct = () => {
           <TableHead>Total Products</TableHead>
         </TableRow>
       </TableHeader>
-      {/* <TableBody>
-        {invoices.map((invoice) => (
-          <TableRow key={invoice.invoice}>
-            <TableCell className="font-medium">{invoice.invoice}</TableCell>
-            <TableCell>{invoice.paymentStatus}</TableCell>
-            <TableCell>{invoice.paymentMethod}</TableCell>
-            <TableCell className="text-right">{invoice.totalAmount}</TableCell>
+      <TableBody>
+        {products?.map((product, idx) => (
+          <TableRow key={product._id}>
+            <TableCell className="font-medium text-center">{idx + 1}</TableCell>
+            <TableCell className="font-medium">{product.productName}</TableCell>
+            <TableCell className="w-[400px]">
+              <img src={displayImage(product.productImage)} 
+              alt={product.productName} 
+              className="h-32 w-32" />
+            </TableCell>
+            <TableCell>{product.productCategory.categoryName}</TableCell>
+            <TableCell>{product.productPrice}</TableCell>
+            <TableCell>{product.totalProduct}</TableCell>
           </TableRow>
         ))}
-      </TableBody> */}
+      </TableBody>
       {/* <TableFooter>
         <TableRow>
           <TableCell colSpan={3}>Total</TableCell>
