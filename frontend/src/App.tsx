@@ -16,7 +16,7 @@ import AddProductForm from "./pages/dashboard/product/add-products";
 import AddCategoryForm from "./pages/dashboard/category/add-category";
 import GetProduct from "./pages/dashboard/product/get-product";
 import GetOrder from "./pages/dashboard/orders/get-order";
-import GetCustomer from "./pages/dashboard/customers/get-customer";
+import UserPage from "./pages/dashboard/user/get-user";
 import GetCategory from "./pages/dashboard/category/get-category";
 
 
@@ -57,7 +57,7 @@ const App = () => {
           <Route path="/dashboard/orders" element={<GetOrder />} />
 
           {/* Customers */}
-          <Route path="/dashboard/customers" element={<GetCustomer />} />
+          <Route path="/dashboard/customers" element={<UserPage />} />
         </Route>
       </Routes>
     </Router>

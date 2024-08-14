@@ -10,7 +10,7 @@ const verifyJWT = ExpressJWT({
 exports.jwtMiddleware = (req, res, next) => {
     verifyJWT(req, res, (err) => {
         if(err){
-            return res.status(401).json({message: "Unauthorized"});
+            return res.status(401).json({error: "Unauthorized"});
         }
         next();
     });
