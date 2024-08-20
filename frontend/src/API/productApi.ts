@@ -17,7 +17,6 @@ export const getProducts = async (url:string) => {
 export const getProductById = async (url: string) => {
     try {
         const { data } = await axios.get(`${AppConfig.API_URL}/${url}`)
-        console.log(data)
         return data as IProduct
     } catch (error) {
         toast.error(errorMessage(error))

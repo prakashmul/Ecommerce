@@ -16,7 +16,7 @@ import Button from '../../../component/reusable/button/button'
 import { Link } from 'react-router-dom'
 import DeleteModal from './delete-modal'
 
-type IModal = "update" |" delete"
+type IModal = "update" | " delete"
 
 const GetProduct = () => {
   const [modal, setModal] = useState<IModal | null>(null);
@@ -63,13 +63,15 @@ const GetProduct = () => {
               <TableCell>{product.totalProduct}</TableCell>
               <TableCell className=''>
                 <div className='flex items-center gap-2'>
-                  <Button
-                    buttonType={'submit'}
-                    buttonColor={{
-                      primary: true,
-                    }}>
-                    Update
-                  </Button>
+                  <Link to={`/dashboard/update-product/${product._id}`}>
+                    <Button
+                      buttonType={'submit'}
+                      buttonColor={{
+                        primary: true,
+                      }}>
+                      Update
+                    </Button>
+                  </Link>
                   <DeleteModal />
                 </div>
               </TableCell>
