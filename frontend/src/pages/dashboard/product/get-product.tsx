@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { getProducts } from '../../../API/productApi'
-import useSWR from 'swr'
+import useSWR, { mutate } from 'swr'
 import {
   Table,
   TableBody,
@@ -11,20 +11,41 @@ import {
   TableHeader,
   TableRow,
 } from "../../../../src/@/components/ui/table"
-import { displayImage } from '../../../utils/helper'
+import { displayImage, errorMessage } from '../../../utils/helper'
 import Button from '../../../component/reusable/button/button'
 import { Link } from 'react-router-dom'
 import DeleteModal from './delete-modal'
+import { toast } from 'sonner'
+import { AppConfig } from '../../../config/app.config'
+import axios from 'axios'
+import { IProduct } from '../../../interface/product'
 
-type IModal = "update" | " delete"
+type IModal = "update" | "delete"
 
 const GetProduct = () => {
+  const { data: products } = useSWR('viewproduct', getProducts);
   const [modal, setModal] = useState<IModal | null>(null);
-  const { data: products } = useSWR('viewproduct', getProducts)
+
+  const [product, setProduct] = useState<IProduct | null>(null);
+
+  const deleteProduct = useCallback(async(id: string) => {
+    try {
+      const {data} = await axios.delete(`${AppConfig.API_URL}/deleteproduct/${id}`)
+
+      const updateProduct = products?.filter((p) => p._id !== product?._id);
+      mutate('viewproduct', updateProduct)
+
+      toast.message(data.message)
+      setModal(null)
+    } catch (error) {
+      toast.error(errorMessage(error))
+    }
+  }, [])
 
   return (
     <div>
-      <div className='my-2 flex justify-end'>
+      <div className='my-2 flex justify-between container'>
+        <h1 className='text-2xl font-bold'>All Products</h1>
         <Link to={"/dashboard/add-product"}>
           <Button
             buttonType={'button'}
@@ -72,22 +93,34 @@ const GetProduct = () => {
                       Update
                     </Button>
                   </Link>
-                  <DeleteModal />
+
+                  <Button
+                        buttonType={'submit'}
+                        buttonColor={{
+                            secondary: true,
+                        }}
+                        onClick={() => {setModal("delete"); setProduct(product)}}
+                        >
+                        Delete
+                    </Button>
+                  {/* <DeleteModal onDelete={() => deleteProduct(product._id)}/> */}
                 </div>
               </TableCell>
             </TableRow>
           ))}
         </TableBody>
-        {/* <TableFooter>
-        <TableRow>
-          <TableCell colSpan={3}>Total</TableCell>
-          <TableCell className="text-right">$2,500.00</TableCell>
-        </TableRow>
-      </TableFooter> */}
       </Table>
 
-      {/* Modal */}
-      {/* <DeleteModal /> */}
+      {/* modal */}
+      {
+        product&&
+        <DeleteModal
+          open = {modal === "delete"}
+          onClose={() => setModal(null)}
+          onDelete={() => deleteProduct(product._id)}
+        />
+      }
+
 
     </div>
   )

@@ -62,7 +62,8 @@ const navigate = useNavigate();
       product_description: product?.productDescription || "",
       product_rating: Number(product?.productRating) || 0,
       total_product: Number(product?.totalProduct) || 0,
-      product_category: product?.productCategory._id || ""
+      product_category: product?.productCategory._id || "",
+      product_image: product?.productImage || ""
     }
   });
 

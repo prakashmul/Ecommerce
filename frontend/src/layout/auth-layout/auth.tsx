@@ -6,18 +6,20 @@ import { useAuth } from '../../hooks/use-auth'
 
 const AuthLayout = () => {
   const navigate = useNavigate();
-  const {accessToken} = useAuth();
+  const { accessToken } = useAuth();
 
   useEffect(() => {
 
-    if(!accessToken || accessToken == undefined){
-      navigate('/signin') 
+    if (!accessToken || accessToken == undefined) {
+      navigate('/signin')
     }
   }, [accessToken, navigate])
   return (
-    <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
-        <SideBar />
+    <div className='w-full flex'>
+      <SideBar />
+      <div className='ml-60 w-full overflow-hidden'>
         <Outlet />
+      </div>
     </div>
   )
 }
