@@ -49,6 +49,17 @@ const AddCategoryForm = () => {
 
   return (
     <div>
+      <div className='my-2 flex justify-end'>
+        <Link to={"/dashboard/category"}>
+        <Button
+        buttonType={'button'}
+        buttonColor={{
+          primary: true,
+        }}>
+          Go Back
+        </Button>
+        </Link>
+      </div>
       <form className="max-w-sm mx-auto border rounded-lg" onSubmit={handleSubmit(onRegister)}>
         <div className="m-5">
           <div className="mb-5">
