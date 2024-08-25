@@ -20,6 +20,10 @@ import UserPage from "./pages/dashboard/user/get-user";
 import GetCategory from "./pages/dashboard/category/get-category";
 import UpdateProductPage from "./pages/dashboard/product/update-prouct/update-product";
 import UpdateCategoryPage from "./pages/dashboard/category/update-category/update-category";
+import UserLayout from "./layout/user-layout/user-layout";
+import AdminLayout from "./layout/user-layout/admin-layout";
+import UserDashboard from "./pages/dashboard/user-dashboard/user-dashboard";
+import Cart from "./pages/dashboard/carts/Cart";
 
 
 const App = () => {
@@ -45,25 +49,40 @@ const App = () => {
 
         {/* Authentication layout */}
         <Route element={<AuthLayout />}>
-          <Route path="/dashboard" element={<Dashboard />} />
-
-          {/* Products */}
-          <Route path="/dashboard/products" element={<GetProduct />} />
-          <Route path="/dashboard/add-product" element={<AddProductForm />} />
-          <Route path="/dashboard/update-product/:id" element={<UpdateProductPage/>} />
 
 
-          {/* Category */}
-          <Route path="/dashboard/add-category" element={<AddCategoryForm />} />
-          <Route path="/dashboard/category" element={<GetCategory />} />
-          <Route path="/dashboard/update-category/:id" element={<UpdateCategoryPage/>} />
+          {/* Admin Layout */}
+          <Route element={<AdminLayout />}>
 
 
-          {/* Orders */}
-          <Route path="/dashboard/orders" element={<GetOrder />} />
+            <Route path="/dashboard" element={<Dashboard />} />
 
-          {/* Customers */}
-          <Route path="/dashboard/customers" element={<UserPage />} />
+            {/* Products */}
+            <Route path="/dashboard/products" element={<GetProduct />} />
+            <Route path="/dashboard/add-product" element={<AddProductForm />} />
+            <Route path="/dashboard/update-product/:id" element={<UpdateProductPage />} />
+
+
+            {/* Category */}
+            <Route path="/dashboard/add-category" element={<AddCategoryForm />} />
+            <Route path="/dashboard/category" element={<GetCategory />} />
+            <Route path="/dashboard/update-category/:id" element={<UpdateCategoryPage />} />
+
+
+            {/* Orders */}
+            <Route path="/dashboard/orders" element={<GetOrder />} />
+
+            {/* Customers */}
+            <Route path="/dashboard/customers" element={<UserPage />} />
+          </Route>
+
+
+          {/* User layout */}
+          <Route element={<UserLayout />}>
+            <Route path="/user-dashboard" element={<UserDashboard />} />
+            <Route path="/carts" element={<Cart />} />
+          </Route>
+
         </Route>
       </Routes>
     </Router>

@@ -34,19 +34,33 @@ const SigninPage = () => {
         resolver: yupResolver(signinValidation),
     });
 
-    const onSignin = useCallback(async(values: ISigninForm) => {
-        try{
-            const {data} = await axios.post(`${AppConfig.API_URL}/login`, {
+    const onSignin = useCallback(async (values: ISigninForm) => {
+        try {
+            const { data } = await axios.post(`${AppConfig.API_URL}/login`, {
                 email: values.email,
                 password: values.password
             })
             Cookie.set('accessToken', data.accessToken);
             Cookie.set('userId', data.user._id);
+            Cookie.set('role', data.user.role);
 
-            navigate('/dashboard')
+            console.log(data)
+
+
+            switch (data.user.role) {
+                case "admin":
+                    navigate('/dashboard')
+                    break;
+                case "user":
+                    navigate('/user-dashboard')
+                    break;
+                default:
+                    break;
+            }
+
             toast.success(data.message || "Login Successfully")
-            
-        } catch(error) {
+
+        } catch (error) {
             toast.error(errorMessage(error))
             console.log(error)
         }

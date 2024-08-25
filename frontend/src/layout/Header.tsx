@@ -31,7 +31,7 @@ const NavItems = [
 
 const Header = () => {
 
-  const { accessToken } = useAuth();
+  const { accessToken, role } = useAuth();
 
   const location = useLocation();
   const [isLogin, setIsLogin] = useState(false);
@@ -99,7 +99,7 @@ const Header = () => {
                   </Button>
                 </Link>
               </> :
-              <Link to="/dashboard">
+              <Link to={`${role && role === "admin"? "/dashboard" : "/user-dashboard"}`}>
                 <Button
                   buttonType={"button"}
                   buttonColor={{ secondary: true }}

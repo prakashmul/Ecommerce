@@ -8,6 +8,9 @@ const UserPage = () => {
   console.log(users)
   return (
     <div>
+    <div className='my-2 flex justify-between container'>
+      <h1 className='text-2xl font-bold'>All Users</h1>
+      </div>
        <Table>
       <TableCaption>A list of your recent invoices.</TableCaption>
       <TableHeader>
@@ -34,6 +37,7 @@ const UserPage = () => {
       </TableBody>
     </Table>
     </div>
+   
   )
 }
 

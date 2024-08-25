@@ -1,9 +1,11 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { IProduct } from '../../interface/product';
 import useSWR from 'swr';
 import { getProductById } from '../../API/productApi';
-import { displayImage } from '../../utils/helper';
+import { displayImage, errorMessage } from '../../utils/helper';
 import RelatedProducts from './related-products';
+import Button from '../reusable/button/button';
+import { toast } from 'sonner';
 
 interface Props {
     id: string
@@ -12,20 +14,13 @@ interface Props {
 const ProductDetail = ({ id }: Props) => {
     const {data: product} = useSWR(`getproduct/${id}`, getProductById)
 
-    // const [product, setProduct] = useState<IProduct>();
-    // useEffect(() => {
-    //     const productDetail = async () => {
-    //         try {
-    //             const res = await fetch(`https://fakestoreapi.com/products/${id}`);
-    //             const product = await res.json();
-    //             console.log(product);
-    //             setProduct(product);
-    //         } catch (error: any) {
-    //             console.log(error);
-    //         }
-    //     }
-    //     productDetail()
-    // }, [id])
+    const handleAddToCart = useCallback(async () => {
+      try {
+        // const {data} = await axios.post(``)
+      } catch (error) {
+        toast.error(errorMessage(error))
+      }
+    }, [])
 
     return (
       <div>
@@ -39,7 +34,14 @@ const ProductDetail = ({ id }: Props) => {
               <div><span className="font-bold">Rating:</span> {product?.productRating}</div>
               <p><span className="font-bold">Price:</span> {product?.productPrice}</p>
               <p className="">{product?.productDescription}</p>
-            </div>    
+            </div>  
+            <Button 
+            buttonType='button' 
+            buttonColor={{primary: true}}
+            onClick={handleAddToCart}
+            >
+            Add to cart
+            </Button>  
           </div>
           <RelatedProducts id = {id} />
       </div>

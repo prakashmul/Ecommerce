@@ -4,7 +4,7 @@ import { Outlet, useNavigate } from 'react-router-dom'
 import { SideBar } from '../side-bar'
 import { useAuth } from '../../hooks/use-auth'
 
-const AuthLayout = () => {
+const UserLayout = () => {
   const navigate = useNavigate();
   const { accessToken, role } = useAuth();
 
@@ -13,15 +13,13 @@ const AuthLayout = () => {
     if (!accessToken || accessToken == undefined) {
       navigate('/signin')
     }
-  }, [accessToken, navigate])
+    if (accessToken && role === "admin") {
+        navigate('/dashboard')
+    }
+  }, [accessToken, navigate, role])
   return (
-    <div className='w-full flex'>
-      <SideBar role={role} />
-      <div className='ml-60 w-full overflow-hidden'>
-        <Outlet />
-      </div>
-    </div>
+        <Outlet /> 
   )
 }
 
-export default AuthLayout
+export default UserLayout
