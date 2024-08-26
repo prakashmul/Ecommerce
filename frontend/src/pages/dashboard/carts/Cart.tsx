@@ -1,7 +1,15 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '../../../@/components/ui/table'
+import { useAppDispatch } from '../../../hooks/redux'
+import { getOrderProducts } from '../../../redux/slice/order-slice';
 
 const Cart = () => {
+    const dispatch = useAppDispatch();
+
+    useEffect(() => {
+        dispatch(getOrderProducts())
+    }, [dispatch])
+    
     return (
         <div>
             <Table>

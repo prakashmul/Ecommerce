@@ -6,6 +6,8 @@ import { displayImage, errorMessage } from '../../utils/helper';
 import RelatedProducts from './related-products';
 import Button from '../reusable/button/button';
 import { toast } from 'sonner';
+import { addProductToCart } from '../../redux/slice/order-slice';
+import { useAppDispatch } from '../../hooks/redux';
 
 interface Props {
     id: string
@@ -14,13 +16,16 @@ interface Props {
 const ProductDetail = ({ id }: Props) => {
     const {data: product} = useSWR(`getproduct/${id}`, getProductById)
 
+    const dispatch = useAppDispatch();
+
     const handleAddToCart = useCallback(async () => {
-      try {
-        // const {data} = await axios.post(``)
-      } catch (error) {
-        toast.error(errorMessage(error))
+      const product = {
+        productId: id,
+        totalOrder: 1
       }
-    }, [])
+      dispatch(addProductToCart(product))
+      toast.message("Added to cart")
+    }, [dispatch, id])
 
     return (
       <div>
