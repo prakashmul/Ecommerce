@@ -3,29 +3,30 @@ import { IProduct } from "../../interface/product";
 import { AppConfig } from "../../config/app.config";
 import { useAuth } from "../../hooks/use-auth";
 import axios from "axios";
+import { IOrder } from "../../interface/order";
 
 interface IInitialState {
-    products: IProduct[]
+    orderProducts: IOrder[]
 }
 
 const initialState: IInitialState = {
-    products: []
+    orderProducts: []
 }
 
 export const getOrderProducts = createAsyncThunk(
     'product-orders',
     async () => {
-        const {userId} = useAuth()
+        const { userId } = useAuth()
         try {
-            const {data} = await axios.get(`${AppConfig.API_URL}/get-order/${userId}`)
+            const { data } = await axios.get(`${AppConfig.API_URL}/get-order/${userId}`)
 
-            return{
+            return {
                 success: true,
                 message: "Successful",
                 data
             }
         } catch (error) {
-            return{
+            return {
                 success: false,
                 message: "Failed to get orders"
             }
@@ -35,22 +36,22 @@ export const getOrderProducts = createAsyncThunk(
 
 export const addProductToCart = createAsyncThunk(
     'add-product',
-    async ({productId, totalOrder}: {productId: string, totalOrder: number}) => {
-        const {userId} = useAuth()
+    async ({ productId, totalOrder }: { productId: string, totalOrder: number }) => {
+        const { userId } = useAuth()
         try {
-            const {data} = await axios.post(`${AppConfig.API_URL}/create-order/`, {
-                userId: userId,
+            const { data } = await axios.post(`${AppConfig.API_URL}/create-order/`, {
+                userId: userId,     
                 productId,
                 totalOrder: totalOrder
             })
 
-            return{
+            return {
                 success: true,
                 message: "Added to cart",
                 data
             }
         } catch (error) {
-            return{
+            return {
                 success: false,
                 message: "Failed to get orders"
             }
@@ -66,11 +67,11 @@ export const OrderSlice = createSlice({
     },
     extraReducers(builder) {
         builder.addCase(getOrderProducts.fulfilled, (state, action) => {
-            state.products = action.payload.data
+            state.orderProducts = action.payload.data
         })
         builder.addCase(addProductToCart.fulfilled, (state, action) => {
             const product = action.payload.data;
-            state.products.push(product)
+            state.orderProducts.push(product)
         })
     },
 })

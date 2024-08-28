@@ -1,15 +1,16 @@
 import React, { useEffect } from 'react'
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '../../../@/components/ui/table'
-import { useAppDispatch } from '../../../hooks/redux'
+import { useAppDispatch, useAppSelector } from '../../../hooks/redux'
 import { getOrderProducts } from '../../../redux/slice/order-slice';
 
 const Cart = () => {
     const dispatch = useAppDispatch();
+    const { orderProducts } = useAppSelector((store) => store.order)
 
     useEffect(() => {
         dispatch(getOrderProducts())
     }, [dispatch])
-    
+
     return (
         <div>
             <Table>
@@ -20,17 +21,36 @@ const Cart = () => {
                         <TableHead>Product price</TableHead>
                         <TableHead>Total amount</TableHead>
                         <TableHead>Total order</TableHead>
+                        <TableHead className='w-[200px]'>Action</TableHead>
+
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {/* {invoices.map((invoice) => (
-          <TableRow key={invoice.invoice}>
-            <TableCell className="font-medium">{invoice.invoice}</TableCell>
-            <TableCell>{invoice.paymentStatus}</TableCell>
-            <TableCell>{invoice.paymentMethod}</TableCell>
-            <TableCell className="text-right">{invoice.totalAmount}</TableCell>
-          </TableRow>
-        ))} */}
+                    {orderProducts.map((order, idx) => (
+                        <TableRow key={order._id}>
+                            <TableCell className="font-medium">{idx + 1}</TableCell>
+                            <TableCell className="font-medium">{order.product.productName}</TableCell>
+                            <TableCell>{order.product.productPrice}</TableCell>
+                            <TableCell>{Number(order.product.productPrice) * Number(order.totalOrder)}</TableCell>
+                            <TableCell className="">{order.totalOrder}</TableCell>
+                            <TableCell className="">
+                                <div className='flex items-center border w-[150px] rounded-[6px] overflow-hidden'>
+                                    <button type='button'
+                                    className='bg-red-500 px-4 text-white text-xl font-bold w-full'
+                                    >
+                                        -
+                                    </button>
+                                    <span className='px-2 w-full text-center'>0</span>
+                                    <button type='button'
+                                    className='bg-blue-500 px-4 text-white text-xl font-bold w-full'
+                                    >
+                                        +
+                                    </button>
+                                </div>
+                            </TableCell>
+
+                        </TableRow>
+                    ))}
                 </TableBody>
             </Table>
         </div>

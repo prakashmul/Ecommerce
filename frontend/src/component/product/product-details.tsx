@@ -8,6 +8,8 @@ import Button from '../reusable/button/button';
 import { toast } from 'sonner';
 import { addProductToCart } from '../../redux/slice/order-slice';
 import { useAppDispatch } from '../../hooks/redux';
+import { useAuth } from '../../hooks/use-auth';
+import { useNavigate } from 'react-router-dom';
 
 interface Props {
     id: string
@@ -15,17 +17,24 @@ interface Props {
 
 const ProductDetail = ({ id }: Props) => {
     const {data: product} = useSWR(`getproduct/${id}`, getProductById)
-
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
+    const { accessToken } = useAuth(); 
 
     const handleAddToCart = useCallback(async () => {
       const product = {
         productId: id,
         totalOrder: 1
       }
-      dispatch(addProductToCart(product))
-      toast.message("Added to cart")
-    }, [dispatch, id])
+
+      if (accessToken){
+        dispatch(addProductToCart(product))
+        toast.message("Added to cart")
+      } else {
+        toast.error('Please login')
+        navigate('/signin')
+      }
+    }, [accessToken, dispatch, id, navigate])
 
     return (
       <div>
@@ -39,7 +48,7 @@ const ProductDetail = ({ id }: Props) => {
               <div><span className="font-bold">Rating:</span> {product?.productRating}</div>
               <p><span className="font-bold">Price:</span> {product?.productPrice}</p>
               <p className="">{product?.productDescription}</p>
-            </div>  
+            </div> 
             <Button 
             buttonType='button' 
             buttonColor={{primary: true}}
