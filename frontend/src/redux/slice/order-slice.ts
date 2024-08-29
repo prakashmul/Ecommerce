@@ -59,6 +59,30 @@ export const addProductToCart = createAsyncThunk(
     }
 )
 
+export const updateProductToCart = createAsyncThunk(
+    'update-product',
+    async ({ orderId, totalOrder }: { orderId: string, totalOrder: number }) => {
+        const { userId } = useAuth()
+        try {
+            const { data } = await axios.put(`${AppConfig.API_URL}/update-order/${orderId}`, {
+                totalOrder: totalOrder
+            })
+
+            return {
+                success: true,
+                message: "Updated to cart",
+                data
+            }
+        } catch (error) {
+            return {
+                success: false,
+                message: "Failed to update order"
+            }
+        }
+    }
+)
+
+
 export const OrderSlice = createSlice({
     name: 'order',
     initialState,
@@ -70,6 +94,10 @@ export const OrderSlice = createSlice({
             state.orderProducts = action.payload.data
         })
         builder.addCase(addProductToCart.fulfilled, (state, action) => {
+            const product = action.payload.data;
+            state.orderProducts.push(product)
+        })
+        builder.addCase(updateProductToCart.fulfilled, (state, action) => {
             const product = action.payload.data;
             state.orderProducts.push(product)
         })

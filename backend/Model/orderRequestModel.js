@@ -16,6 +16,7 @@ const orderRequestSchema = new mongoose.Schema({
    },
    orderStatus: {
     type: String,
+    default: 'request',
     enum: ['request' | 'shipping' | 'payment' | 'delivered' | 'cancelled']
    },
    shippingAddress: {

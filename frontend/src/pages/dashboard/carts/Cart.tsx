@@ -1,7 +1,9 @@
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '../../../@/components/ui/table'
 import { useAppDispatch, useAppSelector } from '../../../hooks/redux'
-import { getOrderProducts } from '../../../redux/slice/order-slice';
+import { getOrderProducts, updateProductToCart } from '../../../redux/slice/order-slice';
+import { IOrder } from '../../../interface/order';
+import { toast } from 'sonner';
 
 const Cart = () => {
     const dispatch = useAppDispatch();
@@ -9,6 +11,17 @@ const Cart = () => {
 
     useEffect(() => {
         dispatch(getOrderProducts())
+    }, [dispatch])
+
+    const increaseOrder = useCallback((order: IOrder) => {
+        const finalOrder = order.totalOrder++
+        
+        const update = {
+            orderId: order._id,
+            totalOrder: finalOrder
+        }
+        dispatch(updateProductToCart(update))
+        toast.success("Updated to cart")
     }, [dispatch])
 
     return (
@@ -37,12 +50,14 @@ const Cart = () => {
                                 <div className='flex items-center border w-[150px] rounded-[6px] overflow-hidden'>
                                     <button type='button'
                                     className='bg-red-500 px-4 text-white text-xl font-bold w-full'
+                                
                                     >
                                         -
                                     </button>
                                     <span className='px-2 w-full text-center'>0</span>
                                     <button type='button'
                                     className='bg-blue-500 px-4 text-white text-xl font-bold w-full'
+                                    onClick={() => increaseOrder(order)}
                                     >
                                         +
                                     </button>
