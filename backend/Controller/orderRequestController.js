@@ -1,4 +1,7 @@
 const OrderRequestModel = require("../Model/orderRequestModel");
+require('dotenv').config();
+
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 exports.createOrderRequest = async (req, res) => {
   const { products, totalOrder, totalPrice, userId, address } = req.body;
@@ -43,3 +46,32 @@ exports.getOrderRequest = async (req, res) => {
   }
   res.send(order);
 };
+
+
+exports.createPaymentIntent = async (req, res) => {
+  const {stripePaymentIntentId, requestId} = req.body
+
+  const order = await  OrderRequestModel.findById(requestId).populate('products')
+
+  const amount = Math.round(order.totalPrice * 100)
+
+  const paymentIntent = stripe.paymentIntents.create({
+    name: "",
+    amount: amount,
+    payment_method_types: ['card'],
+    currency: 'usd',
+    automatic_payment_methods: {
+      enabled: true,
+    }
+  })
+
+  if(!paymentIntent){
+    return res.status(400).json({error: "Failed to create payment intent"})
+  }
+
+  order.stripePaymentIntentId = paymentIntent.id;
+  await order.save();
+
+  return res.json({message: "Payment successful"})
+
+}

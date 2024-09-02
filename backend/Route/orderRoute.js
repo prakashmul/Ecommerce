@@ -2,7 +2,7 @@ const express = require("express");
 
 const { createOrder, getAllOrders, getOrderByUser, deleteOrder, updateOrderedProduct } = require("../Controller/orderController");
 const { jwtMiddleware } = require("../Middleware/middleware");
-const { createOrderRequest, getOrderRequestById, getOrderRequest } = require("../Controller/orderRequestController");
+const { createOrderRequest, getOrderRequestById, getOrderRequest, createPaymentIntent } = require("../Controller/orderRequestController");
 const router = express.Router();
 
 router.post("/create-order", createOrder);
@@ -17,7 +17,7 @@ router.put("/update-order/:orderId", updateOrderedProduct);
 router.post('/order-request', createOrderRequest);
 router.get('/order-request/:id', getOrderRequestById);
 router.get('/order-request', getOrderRequest);
-
+router.put('/stripe-payment', createPaymentIntent);
 
 
 module.exports = router;

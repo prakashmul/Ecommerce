@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect } from 'react'
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '../../../@/components/ui/table'
+import React, { useCallback, useEffect, useState } from 'react'
+import { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow } from '../../../@/components/ui/table'
 import { useAppDispatch, useAppSelector } from '../../../hooks/redux'
 import { getOrderProducts, setRemoveProduct, updateProductToCart } from '../../../redux/slice/order-slice';
 import { IOrder } from '../../../interface/order';
@@ -7,14 +7,30 @@ import { toast } from 'sonner';
 import axios from 'axios';
 import { AppConfig } from '../../../config/app.config';
 import { errorMessage } from '../../../utils/helper';
+import { Link } from 'react-router-dom';
+import Button from '../../../component/reusable/button/button';
+import { useAuth } from '../../../hooks/use-auth';
 
 const Cart = () => {
+const [totalOrder, setTotalOrder] = useState(0)
+const [totalPrice, setTotalPrice] = useState(0)
+
+
     const dispatch = useAppDispatch();
     const { orderProducts } = useAppSelector((store) => store.order)
+    const { userId } = useAuth()
 
     useEffect(() => {
         dispatch(getOrderProducts())
     }, [dispatch])
+
+    useEffect(() => {
+        const order = orderProducts.reduce((accumulator, currentValue) => accumulator + currentValue.totalOrder, 0 )
+        const amount = orderProducts.reduce((accumulator, currentValue) => accumulator + currentValue.totalOrder * Number(currentValue.product.productPrice), 0 )
+
+        setTotalOrder(order)
+        setTotalPrice(amount)
+    }, [orderProducts])
 
     const increaseOrder = useCallback((order: IOrder) => {
         let product = order.totalOrder
@@ -48,8 +64,36 @@ const Cart = () => {
         }
       }, [dispatch])
 
+      const handleCreateOrderRequest = useCallback(async () => {
+        
+        try {
+            const { data } = await axios.post(`${AppConfig.API_URL}/order-request`, {
+               products: orderProducts.map((o) => o.product._id),
+               totalOrder: totalOrder,
+               totalPrice: totalPrice,
+               userId: userId
+            })
+            toast.success("Order requested successfully")
+        } catch (error) {
+            toast.error(errorMessage(error))
+        }
+      }, [orderProducts, totalOrder, totalPrice, userId])
+
+
     return (
         <div>
+        <div className='my-2 flex justify-between container'>
+        <h1 className='text-2xl font-bold'>Cart</h1>
+          <Button
+            buttonType={'button'}
+            buttonColor={{
+              primary: true,
+            }}
+            onClick={handleCreateOrderRequest}
+            >
+            Create Order
+          </Button>
+      </div>
             <Table>
                 <TableHeader>
                     <TableRow>
@@ -91,6 +135,13 @@ const Cart = () => {
                         </TableRow>
                     ))}
                 </TableBody>
+                <TableFooter>
+                <TableRow>
+            <TableCell colSpan={3} className="text-xl font-bold">Total</TableCell>
+            <TableCell className="text-xl font-bold">{totalPrice}</TableCell>
+            <TableCell colSpan={3} className="text-xl font-bold">{totalOrder}</TableCell>
+        </TableRow>
+        </TableFooter>
             </Table>
         </div>
     )

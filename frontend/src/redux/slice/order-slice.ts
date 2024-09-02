@@ -116,7 +116,7 @@ export const OrderSlice = createSlice({
                     if (index !== -1) {
                         orders[index] = updatedProduct;
                     }
-                }``
+                }
             }
         })
     },
