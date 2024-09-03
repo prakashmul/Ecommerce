@@ -26,12 +26,12 @@ exports.createOrderRequest = async (req, res) => {
 exports.getOrderRequestById = async (req, res) => {
   const { id } = req.params;
 
-  const order = await OrderRequestModel.findById(id)
+  const order = await OrderRequestModel.findOne({"shippingAddress.user": id})
     .populate("shippingAddress.user")
     .populate("products");
 
   if (!order) {
-    return res.status(404).json({ success: false, message: "Order not found" });
+    return res.status(400).json({ success: false, message: "Order not found" });
   }
   res.send(order);
 };
@@ -73,5 +73,25 @@ exports.createPaymentIntent = async (req, res) => {
   await order.save();
 
   return res.json({message: "Payment successful"})
+
+}
+
+
+exports.updateOrderRequest = async(req, res) => {
+  const {id} = req.params
+  const {address, orderStatus} = req.body
+
+  const orderRequest = await OrderRequestModel.findByIdAndUpdate(
+    id,
+    {
+      orderStatus: orderStatus,
+      shippingAddress: {
+        address: address
+      }
+    })
+    if(!orderRequest) {
+    return res.status(400).json({error: "Not found"})
+    } 
+  return res.json({message: "Update successfully"})
 
 }

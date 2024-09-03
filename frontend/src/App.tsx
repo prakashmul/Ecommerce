@@ -24,6 +24,7 @@ import UserLayout from "./layout/user-layout/user-layout";
 import AdminLayout from "./layout/user-layout/admin-layout";
 import UserDashboard from "./pages/dashboard/user-dashboard/user-dashboard";
 import Cart from "./pages/dashboard/carts/Cart";
+import Shipping from "./pages/dashboard/shipping/shipping";
 
 
 const App = () => {
@@ -81,6 +82,8 @@ const App = () => {
           <Route element={<UserLayout />}>
             <Route path="/user-dashboard" element={<UserDashboard />} />
             <Route path="/carts" element={<Cart />} />
+            <Route path="/shipping" element={<Shipping />} />
+
           </Route>
 
         </Route>
