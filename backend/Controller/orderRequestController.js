@@ -24,17 +24,30 @@ exports.createOrderRequest = async (req, res) => {
 };
 
 exports.getOrderRequestById = async (req, res) => {
-  const { id } = req.params;
+  const { id } = req.params
 
-  const order = await OrderRequestModel.findOne({"shippingAddress.user": id})
-    .populate("shippingAddress.user")
-    .populate("products");
+  const order = await OrderRequestModel.findById(id)
+    .populate('shippingAddress.user')
+    .populate('products');
 
   if (!order) {
-    return res.status(400).json({ success: false, message: "Order not found" });
+    return res.status(404).json({ success: false, message: 'Order not found' });
   }
   res.send(order);
-};
+}
+
+exports.getOrderRequestByUser = async (req, res) => {
+  const { userId: id } = req.params
+
+  const order = await OrderRequestModel.find({ "shippingAddress.user": id })
+    .populate('shippingAddress.user')
+    .populate('products');
+
+  if (!order) {
+    return res.status(404).json({ success: false, message: 'Order not found' });
+  }
+  res.send(order);
+}
 
 exports.getOrderRequest = async (req, res) => {
   const order = await OrderRequestModel.find()
@@ -49,32 +62,43 @@ exports.getOrderRequest = async (req, res) => {
 
 
 exports.createPaymentIntent = async (req, res) => {
-  const {stripePaymentIntentId, requestId} = req.body
+  try {
+    const { requestId } = req.body;
 
-  const order = await  OrderRequestModel.findById(requestId).populate('products')
+    // Find the order request by ID and populate the products field
+    const order = await OrderRequestModel.findById(requestId).populate('products');
 
-  const amount = Math.round(order.totalPrice * 100)
-
-  const paymentIntent = stripe.paymentIntents.create({
-    name: "",
-    amount: amount,
-    payment_method_types: ['card'],
-    currency: 'usd',
-    automatic_payment_methods: {
-      enabled: true,
+    if (!order) {
+      return res.status(404).json({ error: "Order not found" });
     }
-  })
 
-  if(!paymentIntent){
-    return res.status(400).json({error: "Failed to create payment intent"})
+    // Calculate the amount in the smallest currency unit (e.g., cents for USD)
+    const amount = Math.round(order.totalPrice); // assuming totalPrice is in dollars
+
+    // Create a payment intent with Stripe
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: amount,
+      currency: 'usd',
+      automatic_payment_methods: {
+        enabled: true,
+      },
+    });
+
+    if (!paymentIntent) {
+      return res.status(400).json({ error: "Failed to create payment intent" });
+    }
+
+    // Save the Stripe Payment Intent ID to the order
+    order.stripePaymentIntentId = paymentIntent.id;
+    await order.save();
+
+    // Return the client secret for the payment intent
+    return res.json({ clientSecret: paymentIntent.client_secret });
+  } catch (error) {
+    console.error('Error creating payment intent:', error);
+    return res.status(500).json({ error: "Internal Server Error" });
   }
-
-  order.stripePaymentIntentId = paymentIntent.id;
-  await order.save();
-
-  return res.json({message: "Payment successful"})
-
-}
+};
 
 
 exports.updateOrderRequest = async(req, res) => {
@@ -85,10 +109,10 @@ exports.updateOrderRequest = async(req, res) => {
     id,
     {
       orderStatus: orderStatus,
-      shippingAddress: {
-        address: address
-      }
-    })
+     $set: {
+      'shippingAddress.address': address
+     }
+    }, {new: true, runValidators: true})
     if(!orderRequest) {
     return res.status(400).json({error: "Not found"})
     } 

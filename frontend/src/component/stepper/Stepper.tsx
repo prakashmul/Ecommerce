@@ -1,30 +1,38 @@
 import classNames from "classnames";
 import React, { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
-import { getOrderRequest } from "../../redux/slice/order-slice";
+import { getOrderRequest, getOrderRequestById } from "../../redux/slice/order-slice";
+import { useParams } from "react-router-dom";
 
 const Stepper = () => {
+    const {id} = useParams()
+
     const dispatch = useAppDispatch()
     const {orderRequest}  = useAppSelector((store) => store.order)
+    console.log(orderRequest)
 
     useEffect(() => {
-        dispatch(getOrderRequest())
-    }, [dispatch])
+        if(id){
+            dispatch(getOrderRequestById(id))
+        }
+    }, [dispatch, id])
     
     const steps = [
         {
             name: "Shipping",
-            isActive: orderRequest?.orderStatus === "shippping"
+            isActive: orderRequest?.orderStatus === "shipping"
         },
         {
             name: "Payment",
-            isActive: orderRequest?.orderStatus === "payment"
+            isActive : orderRequest?.orderStatus === "payment"
         },
         {
             name: "Delivered",      
-            isActive: orderRequest?.orderStatus === "delivered"
+            isActive:  orderRequest?.orderStatus === "delivered"
         },
     ]
+
+    console.log(steps)
 
     return (
         <div className="flex items-center justify-center gap-40 my-20">
@@ -33,7 +41,7 @@ const Stepper = () => {
                     <div
                     key = {idx}
                     className= {classNames(
-                        'px-4 py-2 rounded-xl text-white',
+                        'px-4 py-2 rounded-xl text-white  ',
                         step.isActive ? "bg-blue-700" : "bg-rose-800"
                     )}
                     >
