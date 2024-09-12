@@ -1,4 +1,16 @@
 const mongoose = require('mongoose');
+const { ObjectId } = mongoose.Schema;
+
+const PurchaseHistorySchema = new mongoose.Schema({
+    productId: {
+      type: ObjectId,
+      ref: 'Product',
+      required: true
+    },
+    purchasedAt: { type: Date, default: Date.now }
+  });
+  module.exports = mongoose.model('History', PurchaseHistorySchema);
+
 
 const UserSchema = new mongoose.Schema({
     email:{
@@ -18,6 +30,13 @@ const UserSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    purchaseHistory: [PurchaseHistorySchema],
+  ratings: [
+    {
+      productId: { type: ObjectId, ref: 'Product' },
+      rating: Number // 1 to 5 scale
+    }
+  ],
     userDetail: {
         firstName: {
             type: String

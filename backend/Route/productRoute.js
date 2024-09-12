@@ -8,7 +8,8 @@ const {
     updateProduct,
     relatedProduct
   } = require("../Controller/productController");
-  const upload = require("../utils/upload")
+  const upload = require("../utils/upload");
+const { getRecommendations } = require("../algorithm/filtering");
   const router = express.Router();
   
   router.post("/addproduct", upload.single('productImage'), addProduct);
@@ -17,5 +18,7 @@ const {
   router.get("/getproduct/:id", findProduct);
   router.put("/updateproduct/:id", upload.single('productImage'), updateProduct);
   router.get("/relatedproduct/:id", relatedProduct);
+
+  router.get("/recommend-product/:userId", getRecommendations);
 
 module.exports = router;

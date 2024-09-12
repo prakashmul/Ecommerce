@@ -33,3 +33,13 @@ export const getRelatedProduct = async (url: string) => {
         toast.error(errorMessage(error))
     }
 }
+
+
+export const getRecommendedProduct = async (url: string) => {
+    try {
+      const { data } = await axios.get(`${AppConfig.API_URL}/${url}`);
+      return data.products as any[]
+    } catch (error) {
+      toast.error(errorMessage(error));
+    }
+  }

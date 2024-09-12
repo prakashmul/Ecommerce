@@ -3,6 +3,7 @@ import { Link } from "react-router-dom"
 import { AppConfig } from "../../config/app.config"
 import useSWR from "swr"
 import { getProducts } from "../../API/productApi"
+import StarRating from "../ratings/rating"
 
 const Products = () => {
   // const [products, setProducts] = useState<IProduct[]>([])
@@ -34,14 +35,22 @@ const Products = () => {
         products?.map((product) => (
           <div key={product._id} className="border p-5 rounded-lg space-y-5">
             <div className="flex items-center justify-center">
-              <img src={`${AppConfig.IMAGE_URL}/${product?.productImage}`} 
+              {/* <img src={`${AppConfig.IMAGE_URL}/${product?.productImage}`}  */}
+              <img src={`${product?.productImage}`} 
               alt={product.productName} 
               className="h-32 w-32" />
             </div>
             <div className="border-t mt-2">
               <p className="font-bold capitalize">{product?.productCategory?.categoryName}</p>
               <p className="line-clamp-1">{product.productName}</p>
-              <div><span className="font-bold">Rating:</span> {product.productRating}</div>
+              <div>
+              <span className="font-bold">Rating:</span> {product?.productRating}
+              <StarRating
+                count={product?.productRating || 0}
+                edit
+                productId={product._id}
+              />
+            </div>
               <p><span className="font-bold">Price:</span> {product.productPrice}</p>
               <p className="line-clamp-2">{product.productDescription}</p>
             </div>

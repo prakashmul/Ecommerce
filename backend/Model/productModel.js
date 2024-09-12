@@ -27,6 +27,12 @@ const productSchema = new mongoose.Schema({
         ref: 'Category',
         required: true
     }, 
+    tags: [
+        {
+          type: String,
+          trim: true
+        }
+      ],
     productImage:{
         type: String
     },

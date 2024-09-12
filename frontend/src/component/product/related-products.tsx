@@ -18,7 +18,7 @@ const RelatedProducts = ({id}: Props) => {
         products?.map((product) => (
           <div key={product._id} className="border p-5 rounded-lg space-y-5 shadow-xl">
             <div className="flex items-center justify-center">
-              <img src={displayImage(product.productImage)} 
+              <img src={product.productImage} 
               alt={product.productName} 
               className="h-32 w-32" />
             </div>

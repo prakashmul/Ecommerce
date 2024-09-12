@@ -289,3 +289,30 @@ exports.resendConfirmation = async (req, res) => {
       return res.status(200).json({ message: "Confirmation link has been sent to your email" });
 
 }
+
+
+exports.rateProductUser = async (req, res) => {
+  const { rating, productId } = req.body;
+
+  try {
+    const user = await UserModel.findById(req.params.id);
+
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
+    }
+    const existingRatingIndex = user.ratings.findIndex(
+      (r) => r.productId.toString() === productId
+    );
+
+    if (existingRatingIndex !== -1) {
+      user.ratings[existingRatingIndex].rating = rating;
+    } else {
+      user.ratings.push({ productId, rating });
+    }
+    const updatedUser = await user.save();
+
+    res.json(updatedUser);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+};
